@@ -10,10 +10,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/houkah26/mern-authentication.git"
+    "url": "https://github.com/houkah26/finance-backend.git"
   },
   "author": "Austin Houk",
-  "license": "MIT",
   "dependencies": {
     "axios": "^0.16.2",
     "bcrypt-nodejs": "^0.0.3",
@@ -29,6 +28,5 @@
   },
   "engines": {
     "node": "6.11.0"
-  },
-  "referenceUrl": "http://blog.slatepeak.com/creating-a-simple-node-express-api-authentication-system-with-passport-and-jwt/"
+  }
 }

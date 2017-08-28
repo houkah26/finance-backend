@@ -30,12 +30,10 @@ exports.addFunds = (req, res, next) => {
 
   // Return error if fund amount is not valid
   if (fundAmount > 1000000) {
-    return res
-      .status(418)
-      .send({
-        message:
-          "WHAT?! You think I'm just going give you over a million dollars?!"
-      });
+    return res.status(418).send({
+      message:
+        "WHAT?! You think I'm just going give you over a million dollars? You're crazy!"
+    });
   }
 
   User.findById(req.user._id, (err, user) => {

@@ -37,7 +37,7 @@ exports.CSVToArray = (strData, strDelimiter) => {
       "\\r\\n]*))",
     "gi"
   );
-  Deployment: Heroku;
+
   // Create an array to hold our data. Give the array
   // a default empty first row.
   var arrData = [[]];

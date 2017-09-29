@@ -8,7 +8,8 @@ exports.setUserInfoForResponse = user => {
     role: user.role,
     joined: user.createdAt,
     cash: user.cash,
-    cashAdded: user.cashAdded
+    cashAdded: user.cashAdded,
+    updatedAt: user.updatedAt
   };
 };
 
@@ -36,7 +37,7 @@ exports.CSVToArray = (strData, strDelimiter) => {
       "\\r\\n]*))",
     "gi"
   );
-
+  Deployment: Heroku;
   // Create an array to hold our data. Give the array
   // a default empty first row.
   var arrData = [[]];

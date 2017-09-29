@@ -109,7 +109,7 @@ exports.getPortfolio = (req, res, next) => {
 // Helper Functions
 //========================================
 
-// Format array of symbols and return string seperated by '+' (ie: 'MSFT+AAPL+AMZN')
+// Format array of symbols and return string separated by '+' (ie: 'MSFT+AAPL+AMZN')
 const formatStockSymbols = symbols => {
   let symbolString = "";
 

@@ -17,7 +17,7 @@ exports.setUserInfoForResponse = user => {
 // ref: http://stackoverflow.com/a/1293163/2343
 // This will parse a delimited string into an array of
 // arrays. The default delimiter is the comma, but this
-// can be overriden in the second argument.
+// can be overridden in the second argument.
 exports.CSVToArray = (strData, strDelimiter) => {
   // Check to see if the delimiter is defined. If not,
   // then default to comma.

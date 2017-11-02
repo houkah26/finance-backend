@@ -1,8 +1,8 @@
 const axios = require("axios"),
   User = require("../models/users"),
-  helperFunctions = require("./helperFunctions");
+  helperFunctions = require("./helperFunctions"),
+  config = require("../config/main");
 setUserInfoForResponse = helperFunctions.setUserInfoForResponse;
-CSVToArray = helperFunctions.CSVToArray;
 
 //========================================
 // User Info Route
@@ -83,17 +83,37 @@ exports.getHistory = (req, res, next) => {
 //========================================
 exports.getPortfolio = (req, res, next) => {
   const portfolio = req.user.portfolio;
+
+  // If Portfolio is empty respond with empty array
+  if (portfolio.length === 0) {
+    res.status(200).json({
+      portfolio: []
+    });
+
+    return next();
+  }
+
   const symbolsArray = portfolio.map(stock => stock.stockSymbol);
-  const symbolsString = formatStockSymbols(symbolsArray);
+  const symbolsString = symbolsArray.join();
+
+  const headers = {
+    headers: { Authorization: config.stockAPIkey, Accept: "application/json" }
+  };
 
   axios
     .get(
-      `http://download.finance.yahoo.com/d/quotes.csv?f=sl1&s=${symbolsString}`
+      `https://sandbox.tradier.com/v1/markets/quotes?symbols=${symbolsString}`,
+      headers
     )
     .then(response => {
-      const dataArray = CSVToArray(response.data);
+      const quoteResponse = response.data.quotes;
 
-      const portfolioWithPrices = mapPrices(portfolio, dataArray);
+      // Convert to array if not array (single quote)
+      const quoteArray = Array.isArray(quoteResponse.quote)
+        ? quoteResponse.quote
+        : [quoteResponse.quote];
+
+      const portfolioWithPrices = mapPrices(portfolio, quoteArray);
 
       // respond with portfolio including current prices
       res.status(200).json({
@@ -109,31 +129,16 @@ exports.getPortfolio = (req, res, next) => {
 // Helper Functions
 //========================================
 
-// Format array of symbols and return string separated by '+' (ie: 'MSFT+AAPL+AMZN')
-const formatStockSymbols = symbols => {
-  let symbolString = "";
-
-  symbols.forEach((symbol, index, array) => {
-    if (index < array.length - 1) {
-      symbolString += symbol + "+";
-    } else {
-      symbolString += symbol;
-    }
-  });
-
-  return symbolString;
-};
-
 // Map prices to portfolio
-const mapPrices = (portfolio, priceArray) => {
+const mapPrices = (portfolio, quoteArray) => {
   return portfolio.map(stock => {
     // convert mongoose doc to regular js object
     const stockWithPrice = stock.toObject();
 
-    // Add price for matching symbol from priceArray
-    priceArray.forEach(stockPrice => {
-      if (stock.stockSymbol === stockPrice[0]) {
-        stockWithPrice.price = parseFloat(stockPrice[1]);
+    // Add price for matching symbol from quoteArray
+    quoteArray.forEach(stockQuote => {
+      if (stock.stockSymbol === stockQuote.symbol) {
+        stockWithPrice.price = stockQuote.last;
         stockWithPrice.total =
           stockWithPrice.price * stockWithPrice.totalShares;
       }

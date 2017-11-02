@@ -10,6 +10,6 @@ module.exports = {
   database: database,
   // Setting port for the server
   port: process.env.PORT || 3001,
-  // Alpha Vantage stock quote API key
-  stockAPIkey: "IT717SBUULYDIMTY"
+  // Tradier stock quote API key
+  stockAPIkey: "Bearer 2ZZ2CFrXTmRuIuHX2XFyw1GLA3zc"
 };

@@ -1,8 +1,8 @@
 const axios = require("axios"),
   User = require("../models/users"),
-  helperFunctions = require("./helperFunctions");
+  helperFunctions = require("./helperFunctions"),
+  config = require("../config/main");
 setUserInfoForResponse = helperFunctions.setUserInfoForResponse;
-CSVToArray = helperFunctions.CSVToArray;
 
 //========================================
 // Get stock price middleware for stock routes
@@ -10,22 +10,29 @@ CSVToArray = helperFunctions.CSVToArray;
 exports.fetchStockPrice = (req, res, next) => {
   const stockSymbol = req.body.stockSymbol.toUpperCase();
 
+  const headers = {
+    headers: { Authorization: config.stockAPIkey, Accept: "application/json" }
+  };
+
   axios
     .get(
-      `http://download.finance.yahoo.com/d/quotes.csv?f=snl1&s=${stockSymbol}`
+      `https://sandbox.tradier.com/v1/markets/quotes?symbols=${stockSymbol}`,
+      headers
     )
     .then(response => {
-      const dataArray = CSVToArray(response.data);
-      const stock = dataArray[0]; //first item in array is requested stock
+      const quotesResponse = response.data.quotes;
 
-      res.locals.stockSymbol = stock[0];
-      res.locals.stockName = stock[1];
-      res.locals.price = parseFloat(stock[2]);
-
-      // Return error message if price is not a number
-      if (isNaN(res.locals.price)) {
+      // Check if valid stock symbol
+      if (Object.keys(quotesResponse)[0] === "unmatched_symbols") {
+        // Return invalid symbol error message
         return res.status(409).json({ message: "Invalid stock symbol" });
       }
+
+      const stock = quotesResponse.quote;
+
+      res.locals.stockSymbol = stock.symbol;
+      res.locals.stockName = stock.description;
+      res.locals.price = stock.last;
 
       next();
     })

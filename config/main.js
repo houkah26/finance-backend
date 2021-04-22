@@ -1,6 +1,6 @@
 const database =
   process.env.NODE_ENV === "production"
-    ? "mongodb://heroku_6h410gcz:5hmnad1jg9kak433luvo82ccs6@ds129043.mlab.com:29043/heroku_6h410gcz"
+    ? "mongodb+srv://finance_admin:finance@finance.5dpkk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
     : "mongodb://localhost:27017";
 
 module.exports = {
@@ -11,5 +11,5 @@ module.exports = {
   // Setting port for the server
   port: process.env.PORT || 3001,
   // Tradier stock quote API key
-  stockAPIkey: "Bearer 2ZZ2CFrXTmRuIuHX2XFyw1GLA3zc"
+  stockAPIkey: "Bearer 2ZZ2CFrXTmRuIuHX2XFyw1GLA3zc",
 };

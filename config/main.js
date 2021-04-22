@@ -1,6 +1,6 @@
 const database =
   process.env.NODE_ENV === "production"
-    ? "mongodb+srv://finance_admin:finance@finance.5dpkk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    ? "mongodb+srv://finance_admin:finance@finance.5dpkk.mongodb.net/Finance?retryWrites=true&w=majority"
     : "mongodb://localhost:27017";
 
 module.exports = {
